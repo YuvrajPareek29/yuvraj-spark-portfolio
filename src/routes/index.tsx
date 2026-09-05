@@ -17,7 +17,12 @@ import {
   Brain,
   Sparkles,
   User,
+  Phone,
+  Download,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
+import profileAsset from "@/assets/yuvraj-pareek.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -52,7 +57,24 @@ function Index() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
-  const [formStatus, setFormStatus] = useState<"idle" | "submitted">("idle");
+  const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
+  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+
+  const validateForm = () => {
+    const errors: { name?: string; email?: string; message?: string } = {};
+    if (!formState.name.trim()) {
+      errors.name = "Please enter your name.";
+    }
+    if (!formState.email.trim()) {
+      errors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email.trim())) {
+      errors.email = "Please enter a valid email address (e.g. name@example.com).";
+    }
+    if (!formState.message.trim()) {
+      errors.message = "Please write a message.";
+    }
+    return errors;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
