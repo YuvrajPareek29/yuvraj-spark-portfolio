@@ -77,14 +77,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Yuvraj Pareek | B.Tech CSE Student Portfolio" },
+      {
+        name: "description",
+        content:
+          "Personal portfolio of Yuvraj Pareek, a B.Tech CSE 1st-year student at JECRC University. Explore my skills, education, and get in touch.",
+      },
+      { name: "author", content: "Yuvraj Pareek" },
+      {
+        property: "og:title",
+        content: "Yuvraj Pareek | B.Tech CSE Student Portfolio",
+      },
+      {
+        property: "og:description",
+        content:
+          "Personal portfolio of Yuvraj Pareek, a B.Tech CSE 1st-year student at JECRC University.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@YuvrajPareek" },
     ],
     links: [
       {
@@ -92,6 +103,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -106,7 +123,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="font-sans antialiased">
         {children}
         <Scripts />
       </body>
