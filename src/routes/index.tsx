@@ -58,7 +58,11 @@ function Index() {
   const [activeSection, setActiveSection] = useState("home");
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
-  const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; message?: string }>({});
+  const [formErrors, setFormErrors] = useState<{
+    name?: string | undefined;
+    email?: string | undefined;
+    message?: string | undefined;
+  }>({});
 
   const validateForm = () => {
     const errors: { name?: string; email?: string; message?: string } = {};
