@@ -106,11 +106,18 @@ function Index() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus("submitted");
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setFormStatus("error");
+      return;
+    }
+    setFormStatus("success");
     setTimeout(() => {
       setFormState({ name: "", email: "", message: "" });
+      setFormErrors({});
       setFormStatus("idle");
-    }, 3000);
+    }, 4000);
   };
 
   return (
@@ -261,13 +268,11 @@ function Index() {
             <div className="relative">
               <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-sky/30 to-primary/20 blur-2xl" />
               <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-card bg-gradient-to-br from-secondary to-background shadow-2xl shadow-primary/10 sm:h-80 sm:w-80">
-                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-sky-light/40 to-secondary/60 text-center">
-                  <User className="h-20 w-20 text-navy/40 sm:h-24 sm:w-24" />
-                  <span className="mt-2 text-2xl font-bold text-navy/60 sm:text-3xl">YP</span>
-                  <span className="mt-1 max-w-[80%] text-xs font-medium text-muted-foreground sm:text-sm">
-                    Upload your photo to replace this placeholder
-                  </span>
-                </div>
+                <img
+                  src={profileAsset.url}
+                  alt="Yuvraj Pareek"
+                  className="h-full w-full object-cover object-[center_25%]"
+                />
               </div>
               <div className="absolute -bottom-2 -right-2 rounded-full bg-card p-3 shadow-lg">
                 <Code2 className="h-6 w-6 text-sky" />
