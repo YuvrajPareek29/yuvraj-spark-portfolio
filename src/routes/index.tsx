@@ -17,7 +17,12 @@ import {
   Brain,
   Sparkles,
   User,
+  Phone,
+  Download,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
+import profileAsset from "@/assets/yuvraj-pareek.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -52,7 +57,28 @@ function Index() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
-  const [formStatus, setFormStatus] = useState<"idle" | "submitted">("idle");
+  const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
+  const [formErrors, setFormErrors] = useState<{
+    name?: string | undefined;
+    email?: string | undefined;
+    message?: string | undefined;
+  }>({});
+
+  const validateForm = () => {
+    const errors: { name?: string; email?: string; message?: string } = {};
+    if (!formState.name.trim()) {
+      errors.name = "Please enter your name.";
+    }
+    if (!formState.email.trim()) {
+      errors.email = "Please enter your email address.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email.trim())) {
+      errors.email = "Please enter a valid email address (e.g. name@example.com).";
+    }
+    if (!formState.message.trim()) {
+      errors.message = "Please write a message.";
+    }
+    return errors;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,11 +110,18 @@ function Index() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormStatus("submitted");
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      setFormStatus("error");
+      return;
+    }
+    setFormStatus("success");
     setTimeout(() => {
       setFormState({ name: "", email: "", message: "" });
+      setFormErrors({});
       setFormStatus("idle");
-    }, 3000);
+    }, 4000);
   };
 
   return (
@@ -239,13 +272,11 @@ function Index() {
             <div className="relative">
               <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-sky/30 to-primary/20 blur-2xl" />
               <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-card bg-gradient-to-br from-secondary to-background shadow-2xl shadow-primary/10 sm:h-80 sm:w-80">
-                <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-sky-light/40 to-secondary/60 text-center">
-                  <User className="h-20 w-20 text-navy/40 sm:h-24 sm:w-24" />
-                  <span className="mt-2 text-2xl font-bold text-navy/60 sm:text-3xl">YP</span>
-                  <span className="mt-1 max-w-[80%] text-xs font-medium text-muted-foreground sm:text-sm">
-                    Upload your photo to replace this placeholder
-                  </span>
-                </div>
+                <img
+                  src={profileAsset.url}
+                  alt="Yuvraj Pareek"
+                  className="h-full w-full object-cover object-[center_25%]"
+                />
               </div>
               <div className="absolute -bottom-2 -right-2 rounded-full bg-card p-3 shadow-lg">
                 <Code2 className="h-6 w-6 text-sky" />
@@ -431,6 +462,18 @@ function Index() {
                       <p className="font-medium text-foreground">pareekyuvraj977@gmail.com</p>
                     </div>
                   </a>
+                  <a
+                    href="tel:+917231885170"
+                    className="flex items-center gap-4 rounded-xl bg-secondary p-4 transition-colors hover:bg-accent"
+                  >
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">Phone</p>
+                      <p className="font-medium text-foreground">7231885170</p>
+                    </div>
+                  </a>
                   <div className="flex items-center gap-4 rounded-xl bg-secondary p-4">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
                       <MapPin className="h-5 w-5" />
@@ -441,6 +484,18 @@ function Index() {
                     </div>
                   </div>
                 </div>
+
+                <a
+                  href="/Yuvraj_Pareek_Resume.pdf"
+                  download
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-lg"
+                >
+                  <Download className="h-4 w-4" />
+                  Download Resume
+                </a>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  * Resume is a placeholder PDF — the final resume file will replace it.
+                </p>
 
                 <div className="mt-8">
                   <p className="text-sm font-medium text-muted-foreground">Social Profiles</p>
@@ -479,6 +534,7 @@ function Index() {
               </p>
               <form
                 onSubmit={handleFormSubmit}
+                noValidate
                 className="mt-6 space-y-4"
               >
                 <div>
@@ -491,12 +547,24 @@ function Index() {
                   <input
                     id="name"
                     type="text"
-                    required
                     value={formState.name}
-                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    className="mt-1.5 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20"
+                    onChange={(e) => {
+                      setFormState({ ...formState, name: e.target.value });
+                      if (formErrors.name) setFormErrors({ ...formErrors, name: undefined });
+                    }}
+                    aria-invalid={!!formErrors.name}
+                    aria-describedby={formErrors.name ? "name-error" : undefined}
+                    className={`mt-1.5 w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20 ${
+                      formErrors.name ? "border-red-500" : "border-input"
+                    }`}
                     placeholder="John Doe"
                   />
+                  {formErrors.name && (
+                    <p id="name-error" role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {formErrors.name}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -508,12 +576,24 @@ function Index() {
                   <input
                     id="email"
                     type="email"
-                    required
                     value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                    className="mt-1.5 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20"
+                    onChange={(e) => {
+                      setFormState({ ...formState, email: e.target.value });
+                      if (formErrors.email) setFormErrors({ ...formErrors, email: undefined });
+                    }}
+                    aria-invalid={!!formErrors.email}
+                    aria-describedby={formErrors.email ? "email-error" : undefined}
+                    className={`mt-1.5 w-full rounded-xl border bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20 ${
+                      formErrors.email ? "border-red-500" : "border-input"
+                    }`}
                     placeholder="john@example.com"
                   />
+                  {formErrors.email && (
+                    <p id="email-error" role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {formErrors.email}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -525,26 +605,44 @@ function Index() {
                   <textarea
                     id="message"
                     rows={4}
-                    required
                     value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                    className="mt-1.5 w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20"
+                    onChange={(e) => {
+                      setFormState({ ...formState, message: e.target.value });
+                      if (formErrors.message) setFormErrors({ ...formErrors, message: undefined });
+                    }}
+                    aria-invalid={!!formErrors.message}
+                    aria-describedby={formErrors.message ? "message-error" : undefined}
+                    className={`mt-1.5 w-full resize-none rounded-xl border bg-background px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-sky focus:ring-2 focus:ring-sky/20 ${
+                      formErrors.message ? "border-red-500" : "border-input"
+                    }`}
                     placeholder="Write your message here..."
                   />
+                  {formErrors.message && (
+                    <p id="message-error" role="alert" className="mt-1.5 flex items-center gap-1 text-xs font-medium text-red-500">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {formErrors.message}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
                   className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-lg"
                 >
-                  {formStatus === "submitted" ? (
-                    <>Message Sent!</>
-                  ) : (
-                    <>
-                      Send Message
-                      <Send className="h-4 w-4" />
-                    </>
-                  )}
+                  Send Message
+                  <Send className="h-4 w-4" />
                 </button>
+                {formStatus === "success" && (
+                  <p role="status" className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-3 text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    Thank you! Your message has been sent successfully.
+                  </p>
+                )}
+                {formStatus === "error" && (
+                  <p role="alert" className="flex items-center gap-2 rounded-xl bg-red-500/10 px-4 py-3 text-sm font-medium text-red-500">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    Your message could not be sent. Please fix the errors above and try again.
+                  </p>
+                )}
               </form>
             </div>
           </div>
