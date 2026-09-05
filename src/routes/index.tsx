@@ -60,9 +60,11 @@ function Index() {
       const scrollPosition = window.scrollY + 120;
 
       for (let i = sections.length - 1; i >= 0; i--) {
-        const element = document.getElementById(sections[i]);
+        const sectionId = sections[i];
+        if (!sectionId) continue;
+        const element = document.getElementById(sectionId);
         if (element && element.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
+          setActiveSection(sectionId);
           break;
         }
       }
