@@ -22,6 +22,7 @@ import {
   CheckCircle2,
   AlertCircle,
 } from "lucide-react";
+import ninjaRun from "@/assets/ninja-run.png";
 import profileAsset from "@/assets/yuvraj-pareek.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -56,6 +57,8 @@ const navLinks = [
 function Index() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [dashing, setDashing] = useState(false);
+  const [dashKey, setDashKey] = useState(0);
   const [formState, setFormState] = useState({ name: "", email: "", message: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
   const [formErrors, setFormErrors] = useState<{
@@ -82,8 +85,15 @@ function Index() {
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    setActiveSection(href.replace("#", ""));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const next = href.replace("#", "");
+    if (next === activeSection || dashKey > 0 && dashing) return;
+    setDashing(true);
+    setDashKey((k) => k + 1);
+    setTimeout(() => {
+      setActiveSection(next);
+      window.scrollTo({ top: 0 });
+    }, 550);
+    setTimeout(() => setDashing(false), 1200);
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -630,6 +640,20 @@ function Index() {
           </div>
         </div>
       </section>)}
+
+      {dashing && (
+        <div key={dashKey} className="pointer-events-none fixed inset-0 z-[100] overflow-hidden" aria-hidden="true">
+          <div className="ninja-wipe absolute inset-0" />
+          <div className="speed-lines absolute inset-0" />
+          <img
+            src={ninjaRun}
+            alt=""
+            width={1024}
+            height={1024}
+            className="ninja-dash absolute top-1/2 h-64 w-64 -translate-y-1/2 sm:h-80 sm:w-80"
+          />
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-border bg-card px-4 py-8 sm:px-6 lg:px-8">

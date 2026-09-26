@@ -67,31 +67,31 @@
   --radius: 0.75rem;
 
   /* Light mode: soft slate background with navy accents */
-  --background: oklch(0.98 0.005 250);
+  --background: oklch(0.97 0.025 75);
   --foreground: oklch(0.22 0.045 265);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.22 0.045 265);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.045 265);
-  --primary: oklch(0.28 0.12 260);
+  --primary: oklch(0.68 0.19 45);
   --primary-foreground: oklch(0.98 0.005 250);
-  --secondary: oklch(0.94 0.03 250);
+  --secondary: oklch(0.93 0.06 75);
   --secondary-foreground: oklch(0.28 0.12 260);
   --muted: oklch(0.94 0.02 250);
   --muted-foreground: oklch(0.55 0.05 260);
-  --accent: oklch(0.92 0.06 240);
+  --accent: oklch(0.9 0.1 80);
   --accent-foreground: oklch(0.28 0.12 260);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.88 0.02 255);
+  --border: oklch(0.25 0.05 260 / 25%);
   --input: oklch(0.88 0.02 255);
   --ring: oklch(0.55 0.12 260);
 
   /* Extended palette */
-  --navy: oklch(0.25 0.1 260);
+  --navy: oklch(0.22 0.06 260);
   --navy-light: oklch(0.35 0.1 260);
-  --sky: oklch(0.65 0.16 240);
-  --sky-light: oklch(0.9 0.08 240);
+  --sky: oklch(0.68 0.19 45);
+  --sky-light: oklch(0.92 0.08 70);
 
   --chart-1: oklch(0.55 0.18 240);
   --chart-2: oklch(0.65 0.16 200);
@@ -158,7 +158,14 @@
     scroll-behavior: smooth;
   }
 
+  h1, h2, h3 {
+    font-family: "Bangers", "Inter", sans-serif;
+    letter-spacing: 0.04em;
+  }
+
   body {
+    background-image: radial-gradient(oklch(0.68 0.19 45 / 0.12) 1.2px, transparent 1.2px);
+    background-size: 18px 18px;
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -231,3 +238,14 @@
 @media (prefers-reduced-motion: reduce) {
   .section-enter, .section-enter * { animation: none !important; }
 }
+
+/* Anime ninja dash transition */
+.ninja-dash { left: -30%; animation: ninjaDash 1.2s cubic-bezier(0.6, 0, 0.3, 1) forwards; filter: drop-shadow(0 10px 20px oklch(0 0 0 / 0.35)); }
+.ninja-wipe { background: var(--primary); transform: translateX(-100%); animation: ninjaWipe 1.2s cubic-bezier(0.7, 0, 0.3, 1) forwards; }
+.speed-lines {
+  background: repeating-linear-gradient(0deg, transparent 0 22px, oklch(1 0 0 / 0.55) 22px 24px);
+  opacity: 0; animation: speedLines 1.2s ease forwards;
+}
+@keyframes ninjaDash { 0% { left: -30%; } 100% { left: 110%; } }
+@keyframes ninjaWipe { 0% { transform: translateX(-100%); } 45%, 55% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+@keyframes speedLines { 0%, 100% { opacity: 0; } 30%, 70% { opacity: 1; } }
