@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Menu,
   X,
@@ -80,32 +80,10 @@ function Index() {
     return errors;
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = navLinks.map((link) => link.href.replace("#", ""));
-      const scrollPosition = window.scrollY + 120;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const sectionId = sections[i];
-        if (!sectionId) continue;
-        const element = document.getElementById(sectionId);
-        if (element && element.offsetTop <= scrollPosition) {
-          setActiveSection(sectionId);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    setActiveSection(href.replace("#", ""));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -206,9 +184,10 @@ function Index() {
       </header>
 
       {/* Home Section */}
-      <section
+      {activeSection === "home" && (<section
+        key="home"
         id="home"
-        className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 pt-20 sm:px-6 lg:px-8"
+        className="section-enter pt-28 relative flex min-h-screen items-center justify-center overflow-hidden px-4 pt-20 sm:px-6 lg:px-8"
       >
         <div className="absolute inset-0 -z-10">
           <div className="absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-sky/10 blur-3xl" />
@@ -284,12 +263,13 @@ function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* About Section */}
-      <section
+      {activeSection === "about" && (<section
+        key="about"
         id="about"
-        className="relative px-4 py-24 sm:px-6 lg:px-8"
+        className="section-enter pt-28 relative px-4 py-24 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center fade-in-up">
@@ -360,12 +340,13 @@ function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* Skills Section */}
-      <section
+      {activeSection === "skills" && (<section
+        key="skills"
         id="skills"
-        className="relative px-4 py-24 sm:px-6 lg:px-8"
+        className="section-enter pt-28 relative px-4 py-24 sm:px-6 lg:px-8"
       >
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent via-sky/[0.03] to-transparent" />
         <div className="mx-auto max-w-6xl">
@@ -422,12 +403,13 @@ function Index() {
             ))}
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* Contact Section */}
-      <section
+      {activeSection === "contact" && (<section
+        key="contact"
         id="contact"
-        className="relative px-4 py-24 sm:px-6 lg:px-8"
+        className="section-enter pt-28 relative px-4 py-24 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center fade-in-up">
@@ -647,7 +629,7 @@ function Index() {
             </div>
           </div>
         </div>
-      </section>
+      </section>)}
 
       {/* Footer */}
       <footer className="border-t border-border bg-card px-4 py-8 sm:px-6 lg:px-8">
