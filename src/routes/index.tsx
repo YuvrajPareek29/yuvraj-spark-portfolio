@@ -86,7 +86,7 @@ function Index() {
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
     const next = href.replace("#", "");
-    if (next === activeSection || dashKey > 0 && dashing) return;
+    if (next === activeSection || dashing) return;
     setDashing(true);
     setDashKey((k) => k + 1);
     setTimeout(() => {
